@@ -35,6 +35,6 @@ load("@com_github_atlassian_bazel_tools//goimports:def.bzl", "goimports")
 goimports(
     name = "goimports",
     display_diffs = True,
-    prefix = "//",
+    prefix = "//lib",
     write = True,
 )
