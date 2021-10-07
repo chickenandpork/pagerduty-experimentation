@@ -1,0 +1,40 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# FWIW, Gazelle being primarily a Go BUILD file-creation tool, also acts as a
+# linter/formatter/beautifier for BUILD files: side-effect being to reduce whitespace-based thrash
+# on change.
+
+# gazelle:prefix github.com/chickenandpork/pagerduty-oncall
+gazelle(name = "gazelle")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importpath = "github.com/chickenandpork/pagerduty-oncall",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//lib:go_default_library",
+        "@com_github_urfave_cli_v2//:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "pdoc",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
+
+##### Administrivia
+
+# GOIMPORTS
+# Simple method of formatting (opinionated, fairly common standard) the few go files in the
+# platform repo.  Equivalent of a `goimports -w ./...`
+load("@com_github_atlassian_bazel_tools//goimports:def.bzl", "goimports")
+
+goimports(
+    name = "goimports",
+    display_diffs = True,
+    prefix = "//",
+    write = True,
+)
